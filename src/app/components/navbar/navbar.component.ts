@@ -10,8 +10,11 @@ import { RouterModule } from '@angular/router';
 })
 export class NavbarComponent {
 
+  constructor(){
+
+  }
+
   @Input() items: CartItem[] = [];
 
-  @Input() total: number = 0;  
 
 }
