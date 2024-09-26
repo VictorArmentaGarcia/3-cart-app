@@ -6,6 +6,9 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { Router, RouterOutlet } from '@angular/router';
 import { SharingDataService } from '../services/sharing-data.service';
 import Swal from 'sweetalert2';
+import { Store } from '@ngrx/store';
+import { ItemsState } from '../store/items.reducer';
+import { add, remove, total } from '../store/items.actions';
 
 @Component({
   selector: 'cart-app',
@@ -20,13 +23,18 @@ export class CartAppComponent implements OnInit {
   total: number = 0;
 
   constructor(
+    private store: Store<{ items: ItemsState}>,
     private router: Router,
     private sharingDataService: SharingDataService,
-    private service: ProductService) { }
+    private service: ProductService) {
+      this.store.select('items').subscribe(state => {
+        this.items = state.items,
+        this.total = state.total
+      });
+     }
 
   ngOnInit(): void {
-    this.items = JSON.parse(sessionStorage.getItem('cart') || '[]');
-    //this.calculateTotal();
+    this.store.dispatch(total());
     this.onDeleteCart();
     this.onAddCart();
   }
@@ -34,7 +42,9 @@ export class CartAppComponent implements OnInit {
   onAddCart(): void {
     this.sharingDataService.productEventEmitter.subscribe(product => {
   
-      //this.calculateTotal();
+      this.store.dispatch(add({ product: product}));
+      this.store.dispatch(total());
+
       this.saveSession();
       this.router.navigate(['/cart'], {
         state: {items: this.items, total: this.total}
@@ -63,13 +73,14 @@ export class CartAppComponent implements OnInit {
       }).then((result) => {
         if (result.isConfirmed) {
 
-
           
           if (this.items.length == 0) {
             sessionStorage.removeItem('cart');
             sessionStorage.clear();
           }
-          //this.calculateTotal();
+          
+          this.store.dispatch(remove({id}));
+          this.store.dispatch(total());
           this.saveSession();
 
           this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
