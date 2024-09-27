@@ -1,5 +1,5 @@
 import { createReducer, on } from "@ngrx/store";
-import { load } from "./products.actions";
+import { findAll, load } from "./products.actions";
 
 const products: any[] = [];
 
@@ -9,11 +9,14 @@ const initialstate = {
 
 export const productReducer = createReducer(
     initialstate,
-    on(load, (state, { products }) => {
-        return {
-            products: [... products]
-        }
-    }),
     //opera igual pero esta simplificado
-    //on(load, (state, { products }) => ({ products: [... products]})
+    // on(load, (state, { products }) => {
+    //     return {
+    //         products: [... products]
+    //     }
+    // }),
+    //opera igual pero esta simplificado
+    on(load, (state) => ({ products: [... state.products]})),
+    on(findAll, (state, { products }) => ({ products: [... products]})),
+
 )
