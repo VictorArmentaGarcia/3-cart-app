@@ -25,3 +25,16 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+
+instalar para mensajes rapidos 
+npm install sweetalert2        
+
+instalar para el store
+ ng add @ngrx/store@latest
+
+instalar redux
+ng add @ngrx/store-devtools@latest
+
+instalar ng effects
+ng add @ngrx/effects
